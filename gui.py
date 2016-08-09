@@ -80,7 +80,7 @@ def pressurize(valve_number):
     state = client.read_holding_registers(register_number, 1).registers[0]
     if state:
         print('Switching valve state from True to False')
-        client.write_register(register_number, False)
+        client.write_register(register_number, 0)
         client.write_coil(valve_number, False)
 
 
@@ -89,7 +89,7 @@ def depressurize(valve_number):
     state = client.read_holding_registers(register_number, 1).registers[0]
     if not state:
         print('Switching valve state from False to True')
-        client.write_register(register_number, True)
+        client.write_register(register_number, 1)
         client.write_coil(valve_number, True)
 
 
