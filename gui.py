@@ -76,16 +76,24 @@ def change_pressure_state(instance):
 
 
 def pressurize(valve_number):
-    state = client.read_coils(valve_number, 1)
-    if state.bits[0]:
+    state = client.read_holding_registers(512 + valve_number, 1).registers
+    if state:
         print('Switching valve state from True to False')
         client.write_coil(valve_number, False)
 
 
 def depressurize(valve_number):
-    state = client.read_coils(valve_number, 1)
+    state = client.read_holding_registers(512 + valve_number, 1).registers
     if not state.bits[0]:
         print('Switching valve state from False to True')
         client.write_coil(valve_number, True)
 
-Geppetto().run()
+
+def startup():
+    for i in range(45):
+        client.write_coil(i, True)
+        client.write_register(512 + i, True)
+
+if __name__ == "__main__":
+    startup()
+    Geppetto().run()
