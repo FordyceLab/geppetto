@@ -5,7 +5,23 @@ from kivy.uix.gridlayout import GridLayout
 
 client = ModbusTcpClient('192.168.1.3')
 
-labels = {"PBS": 0,
+labels = ["PBS",
+          "Antibody",
+          "bBSA",
+          "Neutravidin",
+          "Extra 1",
+          "Extra 2",
+          "Protein",
+          "Waste",
+          "Buttons 1",
+          "Buttons 2",
+          "Sandwiches 1",
+          "Sandwiches 2",
+          "Neck",
+          "In",
+          "Out"]
+
+valves = {"PBS": 0,
           "Antibody": 1,
           "bBSA": 2,
           "Neutravidin": 3,
@@ -17,9 +33,9 @@ labels = {"PBS": 0,
           "Buttons 2": 9,
           "Sandwiches 1": 10,
           "Sandwiches 2": 11,
-          "Neck": 1,
-          "In": 1,
-          "Out": 1}
+          "Neck": 12,
+          "In": 13,
+          "Out": 14}
 
 
 class PressureButton(Button):
@@ -35,8 +51,8 @@ class Geppetto(App):
     def build(self):
         layout = GridLayout(cols=4, row_force_default=True,
                             row_default_height=70)
-        for i in labels.keys:
-            button = PressureButton(valve_number=labels[i],
+        for i in labels:
+            button = PressureButton(valve_number=valves[i],
                                     text=i,
                                     background_normal='',
                                     background_color=(.94, .05, .05, 1.0))
