@@ -3,7 +3,8 @@ from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
 
-client = ModbusTcpClient('192.168.1.3')
+# client = ModbusTcpClient('192.168.1.3')
+client = ModbusTcpClient()
 
 labels = ["PBS",
           "Antibody",
@@ -77,18 +78,20 @@ def change_pressure_state(instance):
 
 def pressurize(valve_number):
     register_number = 512 + valve_number
-    state = client.read_coils(register_number, 1).bits[0]
+    # state = client.read_coils(register_number, 1).bits[0]
+    state = True
     if state:
         print('Switching valve state from True to False')
-        client.write_coil(valve_number, False)
+        # client.write_coil(valve_number, False)
 
 
 def depressurize(valve_number):
     register_number = 512 + valve_number
-    state = client.read_coils(register_number, 1).bits[0]
+    # state = client.read_coils(register_number, 1).bits[0]
+    state = False
     if not state:
         print('Switching valve state from False to True')
-        client.write_coil(valve_number, True)
+        # client.write_coil(valve_number, True)
 
 
 def startup():
@@ -96,5 +99,5 @@ def startup():
         client.write_coil(i, True)
 
 if __name__ == "__main__":
-    startup()
+    # startup()
     Geppetto().run()
