@@ -4,12 +4,22 @@ client = ModbusTcpClient('127.0.0.1')
 
 
 def pressurize(valve_number):
-    state = client.read_coils(valve_number, 1)
-    if state.bits[0]:
-        client.write_coil(1, False)
+    register_number = 512 + valve_number
+    # state = client.read_coils(register_number, 1).bits[0]
+    state = True
+    if state:
+        print('Switching valve state from True to False')
+        # client.write_coil(valve_number, False)
 
 
 def depressurize(valve_number):
-    state = client.read_coils(valve_number, 1)
-    if not state.bits[0]:
-        client.write_coil(1, True)
+    register_number = 512 + valve_number
+    # state = client.read_coils(register_number, 1).bits[0]
+    state = False
+    if not state:
+        print('Switching valve state from False to True')
+        # client.write_coil(valve_number, True)
+
+def startup():
+    for i in range(48):
+        client.write_coil(i, True)

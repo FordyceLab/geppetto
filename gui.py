@@ -2,6 +2,7 @@ from pymodbus3.client.sync import ModbusTcpClient
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
+from valves import pressurize, depressurize
 
 # client = ModbusTcpClient('192.168.1.3')
 client = ModbusTcpClient()
@@ -74,30 +75,3 @@ def change_pressure_state(instance):
         depressurize(instance.valve_number)
         instance.pressure_state = True
         instance.background_color = (.94, .05, .05, 1.0)
-
-
-def pressurize(valve_number):
-    register_number = 512 + valve_number
-    # state = client.read_coils(register_number, 1).bits[0]
-    state = True
-    if state:
-        print('Switching valve state from True to False')
-        # client.write_coil(valve_number, False)
-
-
-def depressurize(valve_number):
-    register_number = 512 + valve_number
-    # state = client.read_coils(register_number, 1).bits[0]
-    state = False
-    if not state:
-        print('Switching valve state from False to True')
-        # client.write_coil(valve_number, True)
-
-
-def startup():
-    for i in range(48):
-        client.write_coil(i, True)
-
-if __name__ == "__main__":
-    # startup()
-    Geppetto().run()
