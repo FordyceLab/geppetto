@@ -25,9 +25,10 @@ labels = [key for key in valves.keys()]
 
 
 class ButtonHolder(BoxLayout):
-    def __init__(self, valve_number, label, initial_state, x, y, *args, **kwargs):
+    def __init__(self, valve_number, label, initial_state, x, y, *args,
+                 **kwargs):
         super(ButtonHolder, self).__init__(*args, **kwargs)
-        self.size = (110, 40)
+        self.size = (80, 40)
         self.size_hint = (None, None)
         self.pos = (x, y)
         self.orientation = "horizontal"
@@ -44,11 +45,11 @@ class ButtonHolder(BoxLayout):
         labels.add_widget(Label(text=label,
                                 font_size=10,
                                 color=(0, 0, 0, 1)))
-        labels.add_widget(Label(text="Depressurized",
+        labels.add_widget(Label(text="D",
                                 font_size=10,
                                 color=(0, 0, 0, 1),
                                 id=str(valve_number) + "_state_label"))
-        labels.add_widget(Label(text="Valve: " + str(valve_number),
+        labels.add_widget(Label(text=str(valve_number),
                                 font_size=10,
                                 color=(0, 0, 0, 1)))
 
@@ -120,9 +121,9 @@ def change_pressure_state(instance):
         pressurize(instance.valve_number)
         instance.pressure_state = False
         instance.background_color = (.94, .05, .05, 1.0)
-        label.text = "Depressurized"
+        label.text = "D"
     else:
         depressurize(instance.valve_number)
         instance.pressure_state = True
         instance.background_color = (.05, .5, .94, 1.0)
-        label.text = "Pressurized"
+        label.text = "P"
