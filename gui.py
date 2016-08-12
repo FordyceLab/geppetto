@@ -11,49 +11,25 @@ from kivy.core.window import Window
 from kivy.uix.image import Image
 from kivy.graphics import Rectangle, Color
 from kivy.uix.scatter import Scatter
+from yaml import load
+
+with open("example.yaml", "r") as config_file:
+    config = load(config_file)
 
 # client = ModbusTcpClient('192.168.1.3')
 client = ModbusTcpClient()
 
-labels = ["PBS",
-          "Antibody",
-          "bBSA",
-          "Neutravidin",
-          "Extra 1",
-          "Extra 2",
-          "Protein",
-          "Waste",
-          "Buttons 1",
-          "Buttons 2",
-          "Sandwiches 1",
-          "Sandwiches 2",
-          "Neck",
-          "In",
-          "Out"]
+valves = {valve: config["valves"][valve] for valve in config["valves"]}
 
-valves = {"PBS": 0,
-          "Antibody": 1,
-          "bBSA": 2,
-          "Neutravidin": 3,
-          "Extra 1": 4,
-          "Extra 2": 5,
-          "Protein": 6,
-          "Waste": 7,
-          "Buttons 1": 8,
-          "Buttons 2": 9,
-          "Sandwiches 1": 10,
-          "Sandwiches 2": 11,
-          "Neck": 12,
-          "In": 13,
-          "Out": 14}
+labels = [key for key in valves.keys()]
 
 
 class ButtonHolder(BoxLayout):
-    def __init__(self, valve_number, label, initial_state, *args, **kwargs):
+    def __init__(self, valve_number, label, initial_state, x, y, *args, **kwargs):
         super(ButtonHolder, self).__init__(*args, **kwargs)
-        self.size = (120, 40)
+        self.size = (110, 40)
         self.size_hint = (None, None)
-        self.pos = (50, 70)
+        self.pos = (x, y)
         self.orientation = "horizontal"
         self.padding = 5
 
@@ -77,7 +53,7 @@ class ButtonHolder(BoxLayout):
                                 color=(0, 0, 0, 1)))
 
         self.add_widget(labels)
-        button = PressureButton(valve_number, False, size_hint_x=.3)
+        button = PressureButton(valve_number, False, size_hint_x=.4)
         button.bind(on_press=change_pressure_state)
         self.add_widget(button)
 
@@ -119,9 +95,11 @@ class ValveControls(FloatLayout):
                       center=self.center)
 
         for i in labels:
-            button = ButtonHolder(valve_number=valves[i],
+            button = ButtonHolder(valve_number=valves[i]["valve_number"],
                                   label=i,
-                                  initial_state=False)
+                                  initial_state=valves[i]["initial_state"],
+                                  x=valves[i]["x_pos"],
+                                  y=valves[i]["y_pos"])
 
             self.add_widget(button)
 
