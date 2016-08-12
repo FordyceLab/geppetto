@@ -1,0 +1,77 @@
+ip_address: 192.168.1.3
+valves:
+    PBS:
+        valve_number: 0
+        initial_state: False
+        x_pos: 120
+        y_pos: 10
+    Antibody:
+        valve_number: 1
+        initial_state: False
+        x_pos: 60
+        y_pos: 365
+    bBSA:
+        valve_number: 2
+        initial_state: False
+        x_pos: 50
+        y_pos: 120
+    Neutravidin:
+        valve_number: 3
+        initial_state: False
+        x_pos: 420
+        y_pos: 365
+    Extra 1:
+        valve_number: 4
+        initial_state: False
+        x_pos: 96
+        y_pos: 45
+    Extra 2:
+        valve_number: 5
+        initial_state: False
+        x_pos: 600
+        y_pos: 500
+    Protein:
+        valve_number: 6
+        initial_state: False
+        x_pos: 573
+        y_pos: 223
+    Waste:
+        valve_number: 7
+        initial_state: False
+        x_pos: 630
+        y_pos: 24
+    Buttons 1:
+        valve_number: 8
+        initial_state: False
+        x_pos: 98
+        y_pos: 500
+    Buttons 2:
+        valve_number: 9
+        initial_state: False
+        x_pos: 547
+        y_pos: 547
+    Sandwiches 1:
+        valve_number: 10
+        initial_state: False
+        x_pos: 642
+        y_pos: 120
+    Sandwiches 2:
+        valve_number: 11
+        initial_state: False
+        x_pos: 620
+        y_pos: 63
+    Neck:
+        valve_number: 12
+        initial_state: False
+        x_pos: 553
+        y_pos: 55
+    In:
+        valve_number: 13
+        initial_state: False
+        x_pos: 73
+        y_pos: 453
+    Out:
+        valve_number: 14
+        initial_state: False
+        x_pos: 200
+        y_pos: 200
