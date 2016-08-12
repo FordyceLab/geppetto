@@ -8,7 +8,7 @@ def pressurize(valve_number):
     # state = client.read_coils(register_number, 1).bits[0]
     state = True
     if state:
-        print('Switching valve state from True to False')
+        pass
         # client.write_coil(valve_number, False)
 
 
@@ -17,7 +17,7 @@ def depressurize(valve_number):
     # state = client.read_coils(register_number, 1).bits[0]
     state = False
     if not state:
-        print('Switching valve state from False to True')
+        pass
         # client.write_coil(valve_number, True)
 
 def startup():
