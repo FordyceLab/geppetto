@@ -3,10 +3,14 @@ from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
 from valves import pressurize, depressurize
 from kivy.core.window import Window
+from kivy.uix.image import Image
+from kivy.graphics import Rectangle, Color
+from kivy.uix.scatter import Scatter
 
 # client = ModbusTcpClient('192.168.1.3')
 client = ModbusTcpClient()
@@ -47,9 +51,18 @@ valves = {"PBS": 0,
 class ButtonHolder(BoxLayout):
     def __init__(self, valve_number, label, initial_state, *args, **kwargs):
         super(ButtonHolder, self).__init__(*args, **kwargs)
+        self.size = (120, 40)
+        self.size_hint = (None, None)
+        self.pos = (50, 70)
         self.orientation = "horizontal"
-        self.padding = 20
-        self.background_color = (1, 1, 1, 1)
+        self.padding = 5
+
+        with self.canvas:
+            Color(1, 1, 1, 1)
+            Rectangle(size=self.size,
+                      pos=self.pos)
+            print(self.size)
+            print(self.center)
 
         labels = BoxLayout(orientation="vertical")
         labels.add_widget(Label(text=label,
@@ -64,7 +77,7 @@ class ButtonHolder(BoxLayout):
                                 color=(0, 0, 0, 1)))
 
         self.add_widget(labels)
-        button = PressureButton(valve_number, False)
+        button = PressureButton(valve_number, False, size_hint_x=.3)
         button.bind(on_press=change_pressure_state)
         self.add_widget(button)
 
@@ -86,7 +99,7 @@ class MainLayout(BoxLayout):
         self.padding = 20
 
         ip_address = TextInput(text="192.168.1.3",
-                               size_hint_y=0.1,
+                               size_hint_y=0.06,
                                size_hint_x=0.3)
         self.add_widget(ip_address)
 
@@ -94,14 +107,16 @@ class MainLayout(BoxLayout):
         self.add_widget(valves)
 
 
-class ValveControls(GridLayout):
+class ValveControls(FloatLayout):
     def __init__(self, *args, **kwargs):
         super(ValveControls, self).__init__(*args, **kwargs)
-        self.cols = 4
-        self.row_force_default = True
-        self.row_default_height = 70
-        self.size_x = 800
-        self.size_y = 800
+        self.size = (800, 530)
+
+        with self.canvas:
+            Color(1, 1, 1, 1)
+            Rectangle(source="800x530.jpg",
+                      size=self.size,
+                      center=self.center)
 
         for i in labels:
             button = ButtonHolder(valve_number=valves[i],
