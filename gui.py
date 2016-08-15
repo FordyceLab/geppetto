@@ -43,7 +43,7 @@ class ButtonHolder(BoxLayout):
         labels.add_widget(Label(text=label,
                                 font_size=10,
                                 color=(0, 0, 0, 1)))
-        labels.add_widget(Label(text="D",
+        labels.add_widget(Label(text="?",
                                 font_size=10,
                                 color=(0, 0, 0, 1),
                                 id=str(valve_number) + "_state_label"))
@@ -62,7 +62,7 @@ class PressureButton(Button):
         super(PressureButton, self).__init__(*args, **kwargs)
         self.pressure_state = initial_state
         self.background_normal = ''
-        self.background_color = (.94, .05, .05, 1.0)
+        self.background_color = (.5, .5, .5, 1.0)
         self.valve_number = valve_number
 
 
@@ -73,13 +73,36 @@ class MainLayout(BoxLayout):
         self.spacing = 10
         self.padding = 20
 
-        ip_address = TextInput(text="192.168.1.3",
-                               size_hint_y=0.06,
-                               size_hint_x=0.3)
-        self.add_widget(ip_address)
+        controls = ControlPanel()
+
+        self.add_widget(controls)
 
         valves = ValveControls()
         self.add_widget(valves)
+        print(self.ids)
+
+
+class ControlPanel(BoxLayout):
+    def __init__(self, *args, **kwargs):
+        super(ControlPanel, self).__init__(*args, **kwargs)
+        self.orientation = "horizontal"
+        self.spacing = 10
+        self.padding = 10
+        self.size_hint_y = 0.1
+
+        ip_address = Label(text="192.168.1.3",
+                           color=(0, 0, 0, 1))
+        self.add_widget(ip_address)
+
+        read_valves = Button(text="Read Valve States")
+        self.add_widget(read_valves)
+
+        pressurize_all = Button(text="Pressurize All")
+        self.add_widget(pressurize_all)
+
+        depressurize_all = Button(text="Depressurize All")
+        self.add_widget(depressurize_all)
+
 
 
 class ValveControls(FloatLayout):
@@ -107,6 +130,7 @@ class Geppetto(App):
     def build(self):
         Window.clearcolor = (1, 1, 1, 1)
         layout = MainLayout()
+        print(layout.ids)
         return layout
 
 
