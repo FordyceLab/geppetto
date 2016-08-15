@@ -16,8 +16,7 @@ from yaml import load
 with open("example.yaml", "r") as config_file:
     config = load(config_file)
 
-# client = ModbusTcpClient('192.168.1.3')
-client = ModbusTcpClient()
+client = ModbusTcpClient('192.168.1.3')
 
 valves = {valve: config["valves"][valve] for valve in config["valves"]}
 
