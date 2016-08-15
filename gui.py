@@ -12,6 +12,7 @@ from kivy.uix.image import Image
 from kivy.graphics import Rectangle, Color
 from kivy.uix.scatter import Scatter
 from yaml import load
+from valves import pressurize, depressurize
 
 with open("example.yaml", "r") as config_file:
     config = load(config_file)
@@ -106,9 +107,11 @@ class ControlPanel(BoxLayout):
         self.add_widget(read_valves)
 
         pressurize_all = Button(text="Pressurize All")
+        pressurize_all.bind(on_press=pressurize_all)
         self.add_widget(pressurize_all)
 
         depressurize_all = Button(text="Depressurize All")
+        depressurize_all.bind(on_press=depressurize_all)
         self.add_widget(depressurize_all)
 
 
@@ -176,4 +179,26 @@ def read_valve_states(instance):
                 if state:
                     child.text = "P"
                 else:
+                    child.text = "D"
+
+
+def pressurize_all():
+    for button in buttons:
+        pressurize(button.valve_number)
+        for child in button.walk():
+            if child.id == str(button.valve_number) + "_valve_button":
+                    child.background_color = (.05, .5, .94, 1.0)
+                    child.pressure_state = True
+            if child.id == str(button.valve_number) + "_state_label":
+                    child.text = "P"
+
+
+def depressurize_all():
+    for button in buttons:
+        depressurize(button.valve_number)
+        for child in button.walk():
+            if child.id == str(button.valve_number) + "_valve_button":
+                    child.background_color = (.94, .05, .05, 1.0)
+                    child.pressure_state = False
+            if child.id == str(button.valve_number) + "_state_label":
                     child.text = "D"
