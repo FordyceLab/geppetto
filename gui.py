@@ -67,7 +67,7 @@ class ButtonHolder(BoxLayout):
 class PressureButton(Button):
     def __init__(self, valve_number, initial_state, *args, **kwargs):
         super(PressureButton, self).__init__(*args, **kwargs)
-        self.id = str(valve_number) + "_vavle_button"
+        self.id = str(valve_number) + "_valve_button"
         self.pressure_state = initial_state
         self.background_normal = ''
         self.background_color = (.5, .5, .5, 1.0)
