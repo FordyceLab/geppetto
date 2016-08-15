@@ -168,14 +168,14 @@ def read_valve_states(instance):
         state = client.read_coils(register_number, 1).bits[0]
         for child in button.walk():
             if child.id == str(button.valve_number) + "_valve_button":
-                if state:
+                if not state:
                     child.background_color = (.05, .5, .94, 1.0)
                     child.pressure_state = True
                 else:
                     child.background_color = (.94, .05, .05, 1.0)
                     child.pressure_state = False
             if child.id == str(button.valve_number) + "_state_label":
-                if state:
+                if not state:
                     child.text = "P"
                 else:
                     child.text = "D"
