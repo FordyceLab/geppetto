@@ -23,6 +23,10 @@ valves = {valve: config["valves"][valve] for valve in config["valves"]}
 
 labels = [key for key in valves.keys()]
 
+device_image = config["device_image"]
+
+buttons = []
+
 
 class ButtonHolder(BoxLayout):
     def __init__(self, valve_number, label, initial_state, x, y, *args,
@@ -33,6 +37,9 @@ class ButtonHolder(BoxLayout):
         self.pos = (x, y)
         self.orientation = "horizontal"
         self.padding = 5
+        self.valve_number = valve_number
+        self.label = label
+        self.initial_state = initial_state
 
         with self.canvas:
             Color(1, 1, 1, .8)
@@ -60,6 +67,7 @@ class ButtonHolder(BoxLayout):
 class PressureButton(Button):
     def __init__(self, valve_number, initial_state, *args, **kwargs):
         super(PressureButton, self).__init__(*args, **kwargs)
+        self.id = str(valve_number) + "_vavle_button"
         self.pressure_state = initial_state
         self.background_normal = ''
         self.background_color = (.5, .5, .5, 1.0)
@@ -95,6 +103,7 @@ class ControlPanel(BoxLayout):
         self.add_widget(ip_address)
 
         read_valves = Button(text="Read Valve States")
+        read_valves.bind(on_press=read_valve_states)
         self.add_widget(read_valves)
 
         pressurize_all = Button(text="Pressurize All")
@@ -104,7 +113,6 @@ class ControlPanel(BoxLayout):
         self.add_widget(depressurize_all)
 
 
-
 class ValveControls(FloatLayout):
     def __init__(self, *args, **kwargs):
         super(ValveControls, self).__init__(*args, **kwargs)
@@ -112,7 +120,7 @@ class ValveControls(FloatLayout):
 
         with self.canvas:
             Color(1, 1, 1, 1)
-            Rectangle(source="800x530.jpg",
+            Rectangle(source=device_image,
                       size=self.size,
                       center=self.center)
 
@@ -122,6 +130,8 @@ class ValveControls(FloatLayout):
                                   initial_state=valves[i]["initial_state"],
                                   x=valves[i]["x_pos"],
                                   y=valves[i]["y_pos"])
+
+            buttons.append(button)
 
             self.add_widget(button)
 
@@ -149,3 +159,22 @@ def change_pressure_state(instance):
         instance.pressure_state = True
         instance.background_color = (.05, .5, .94, 1.0)
         label.text = "P"
+
+
+def read_valve_states(instance):
+    for button in buttons:
+        register_number = 512 + button.valve_number
+        state = client.read_coils(register_number, 1).bits[0]
+        for child in button.walk():
+            if child.id == str(button.valve_number) + "_valve_button":
+                if state:
+                    child.color = (.05, .5, .94, 1.0)
+                    child.pressure_state = True
+                else:
+                    child.color = (.94, .05, .05, 1.0)
+                    child.pressure_state = False
+            if child.id == str(button.valve_number) + "_state_label":
+                if state:
+                    child.text = "P"
+                else:
+                    child.text = "D"

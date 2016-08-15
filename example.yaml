@@ -1,4 +1,5 @@
 ip_address: 192.168.1.3
+device_image: device.jpg
 valves:
     PBS:
         valve_number: 0
@@ -29,7 +30,7 @@ valves:
         valve_number: 5
         initial_state: False
         x_pos: 600
-        y_pos: 500
+        y_pos: 400
     Protein:
         valve_number: 6
         initial_state: False
@@ -44,12 +45,12 @@ valves:
         valve_number: 8
         initial_state: False
         x_pos: 98
-        y_pos: 500
+        y_pos: 400
     Buttons 2:
         valve_number: 9
         initial_state: False
         x_pos: 547
-        y_pos: 547
+        y_pos: 450
     Sandwiches 1:
         valve_number: 10
         initial_state: False
