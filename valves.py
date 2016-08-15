@@ -1,6 +1,7 @@
 from pymodbus3.client.sync import ModbusTcpClient
 
-client = ModbusTcpClient('127.0.0.1')
+# client = ModbusTcpClient('127.0.0.1')
+client = ModbusTcpClient('192.168.1.3')
 
 
 def pressurize(valve_number):
