@@ -107,11 +107,11 @@ class ControlPanel(BoxLayout):
         self.add_widget(read_valves)
 
         pressurize_all = Button(text="Pressurize All")
-        pressurize_all.bind(on_press=pressurize_all)
+        pressurize_all.bind(on_press=pressurize_all_valves)
         self.add_widget(pressurize_all)
 
         depressurize_all = Button(text="Depressurize All")
-        depressurize_all.bind(on_press=depressurize_all)
+        depressurize_all.bind(on_press=depressurize_all_valves)
         self.add_widget(depressurize_all)
 
 
@@ -182,7 +182,7 @@ def read_valve_states(instance):
                     child.text = "D"
 
 
-def pressurize_all():
+def pressurize_all_valves():
     for button in buttons:
         pressurize(button.valve_number)
         for child in button.walk():
@@ -193,7 +193,7 @@ def pressurize_all():
                     child.text = "P"
 
 
-def depressurize_all():
+def depressurize_all_valves():
     for button in buttons:
         depressurize(button.valve_number)
         for child in button.walk():
