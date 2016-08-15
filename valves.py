@@ -8,11 +8,11 @@ def pressurize(valve_number):
     register_number = 512 + valve_number
     state = client.read_coils(register_number, 1).bits[0]
     if state:
-        client.write_coil(valve_number, False)
+        client.write_coil(valve_number, True)
 
 
 def depressurize(valve_number):
     register_number = 512 + valve_number
     state = client.read_coils(register_number, 1).bits[0]
     if not state:
-        client.write_coil(valve_number, True)
+        client.write_coil(valve_number, False)
