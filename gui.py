@@ -183,7 +183,7 @@ def read_valve_states(instance):
                     child.text = "D"
 
 
-def pressurize_all_valves():
+def pressurize_all_valves(instance):
     for button in buttons:
         pressurize(button.valve_number)
         for child in button.walk():
@@ -194,7 +194,7 @@ def pressurize_all_valves():
                     child.text = "P"
 
 
-def depressurize_all_valves():
+def depressurize_all_valves(instance):
     for button in buttons:
         depressurize(button.valve_number)
         for child in button.walk():
