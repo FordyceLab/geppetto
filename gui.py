@@ -35,11 +35,9 @@ class ButtonHolder(BoxLayout):
         self.padding = 5
 
         with self.canvas:
-            Color(1, 1, 1, 1)
+            Color(1, 1, 1, .8)
             Rectangle(size=self.size,
                       pos=self.pos)
-            print(self.size)
-            print(self.center)
 
         labels = BoxLayout(orientation="vertical")
         labels.add_widget(Label(text=label,
