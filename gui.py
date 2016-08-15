@@ -12,7 +12,6 @@ from kivy.uix.image import Image
 from kivy.graphics import Rectangle, Color
 from kivy.uix.scatter import Scatter
 from yaml import load
-from valves import pressurize, depressurize
 
 with open("example.yaml", "r") as config_file:
     config = load(config_file)
