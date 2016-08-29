@@ -2,21 +2,16 @@ from pymodbus3.client.sync import ModbusTcpClient
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.label import Label
-from kivy.uix.gridlayout import GridLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.textinput import TextInput
 from valves import pressurize, depressurize
 from kivy.core.window import Window
-from kivy.uix.image import Image
 from kivy.graphics import Rectangle, Color
-from kivy.uix.scatter import Scatter
 from yaml import load
 
 with open("example.yaml", "r") as config_file:
     config = load(config_file)
 
-# client = ModbusTcpClient('192.168.1.3')
 client = ModbusTcpClient()
 
 valves = {valve: config["valves"][valve] for valve in config["valves"]}
