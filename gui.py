@@ -7,17 +7,8 @@ from valves import pressurize, depressurize
 from kivy.core.window import Window
 from kivy.graphics import Rectangle, Color
 from yaml import load
-
-with open("BeadSynthesizer.yaml", "r") as config_file:
-    config = load(config_file)
-
-valves = {valve: config["valves"][valve] for valve in config["valves"]}
-
-labels = [key for key in valves.keys()]
-
-device_image = config["device_image"]
-
-buttons = []
+from os.path import sep, expanduser, dirname
+from kivy.garden.filebrowser import FileBrowser
 
 
 class ButtonHolder(BoxLayout):
@@ -80,7 +71,6 @@ class MainLayout(BoxLayout):
 
         valves = ValveControls()
         self.add_widget(valves)
-        print(self.ids)
 
 
 class ControlPanel(BoxLayout):
@@ -92,20 +82,65 @@ class ControlPanel(BoxLayout):
         self.size_hint_y = 0.1
 
         initialize_valves = Button(text="Initialize Valve States")
-        initialize_valves.bind(on_press=initialize_valve_states)
+        initialize_valves.bind(on_press=self.initialize_valve_states)
         self.add_widget(initialize_valves)
 
         read_valves = Button(text="Read Valve States")
-        read_valves.bind(on_press=read_valve_states)
+        read_valves.bind(on_press=self.read_valve_states)
         self.add_widget(read_valves)
 
         pressurize_all = Button(text="Pressurize All")
-        pressurize_all.bind(on_press=pressurize_all_valves)
+        pressurize_all.bind(on_press=self.pressurize_all_valves)
         self.add_widget(pressurize_all)
 
         depressurize_all = Button(text="Depressurize All")
-        depressurize_all.bind(on_press=depressurize_all_valves)
+        depressurize_all.bind(on_press=self.depressurize_all_valves)
         self.add_widget(depressurize_all)
+
+    def initialize_valve_states(instance):
+        for button in buttons:
+            if button.initial_state:
+                pressurize(button.valve_number)
+            else:
+                depressurize(button.valve_number)
+
+    def read_valve_states(instance):
+        for button in buttons:
+            register_number = 512 + button.valve_number
+            state = client.read_coils(register_number, 1).bits[0]
+            for child in button.walk():
+                if child.id == str(button.valve_number) + "_valve_button":
+                    if not state:
+                        child.background_color = (.05, .5, .94, 1.0)
+                        child.pressure_state = True
+                    else:
+                        child.background_color = (.94, .05, .05, 1.0)
+                        child.pressure_state = False
+                if child.id == str(button.valve_number) + "_state_label":
+                    if not state:
+                        child.text = "P"
+                    else:
+                        child.text = "D"
+
+    def pressurize_all_valves(instance):
+        for button in buttons:
+            pressurize(button.valve_number)
+            for child in button.walk():
+                if child.id == str(button.valve_number) + "_valve_button":
+                        child.background_color = (.05, .5, .94, 1.0)
+                        child.pressure_state = True
+                if child.id == str(button.valve_number) + "_state_label":
+                        child.text = "P"
+
+    def depressurize_all_valves(instance):
+        for button in buttons:
+            depressurize(button.valve_number)
+            for child in button.walk():
+                if child.id == str(button.valve_number) + "_valve_button":
+                        child.background_color = (.94, .05, .05, 1.0)
+                        child.pressure_state = False
+                if child.id == str(button.valve_number) + "_state_label":
+                        child.text = "D"
 
 
 class ValveControls(FloatLayout):
@@ -133,10 +168,41 @@ class ValveControls(FloatLayout):
 
 class Geppetto(App):
     def build(self):
+        with open(config_file, "r") as config_values:
+            config = load(config_values)
+
+        global valves
+        global labels
+        global device_image
+        global buttons
+
+        valves = {valve: config["valves"][valve] for valve in config["valves"]}
+        labels = [key for key in valves.keys()]
+        device_image = config["device_image"]
+        buttons = []
+
         Window.clearcolor = (1, 1, 1, 1)
         layout = MainLayout()
-        print(layout.ids)
         return layout
+
+
+class ChooseConfigFile(App):
+    def build(self):
+        user_path = expanduser('~') + sep + 'Documents'
+        browser = FileBrowser(select_string='Select',
+                              favorites=[(user_path, 'Documents')])
+        browser.bind(
+            on_success=self._fbrowser_success,
+            on_canceled=self._fbrowser_canceled)
+        return browser
+
+    def _fbrowser_canceled(self, instance):
+        self.stop()
+
+    def _fbrowser_success(self, instance):
+        global config_file
+        config_file = instance.selection[0]
+        self.stop()
 
 
 def change_pressure_state(instance):
@@ -154,52 +220,3 @@ def change_pressure_state(instance):
         instance.pressure_state = True
         instance.background_color = (.05, .5, .94, 1.0)
         label.text = "P"
-
-
-def read_valve_states(instance):
-    for button in buttons:
-        register_number = 512 + button.valve_number
-        state = client.read_coils(register_number, 1).bits[0]
-        for child in button.walk():
-            if child.id == str(button.valve_number) + "_valve_button":
-                if not state:
-                    child.background_color = (.05, .5, .94, 1.0)
-                    child.pressure_state = True
-                else:
-                    child.background_color = (.94, .05, .05, 1.0)
-                    child.pressure_state = False
-            if child.id == str(button.valve_number) + "_state_label":
-                if not state:
-                    child.text = "P"
-                else:
-                    child.text = "D"
-
-
-def initialize_valve_states(instance):
-    for button in buttons:
-        if button.initial_state:
-            pressurize(button.valve_number)
-        else:
-            depressurize(button.valve_number)
-
-
-def pressurize_all_valves(instance):
-    for button in buttons:
-        pressurize(button.valve_number)
-        for child in button.walk():
-            if child.id == str(button.valve_number) + "_valve_button":
-                    child.background_color = (.05, .5, .94, 1.0)
-                    child.pressure_state = True
-            if child.id == str(button.valve_number) + "_state_label":
-                    child.text = "P"
-
-
-def depressurize_all_valves(instance):
-    for button in buttons:
-        depressurize(button.valve_number)
-        for child in button.walk():
-            if child.id == str(button.valve_number) + "_valve_button":
-                    child.background_color = (.94, .05, .05, 1.0)
-                    child.pressure_state = False
-            if child.id == str(button.valve_number) + "_state_label":
-                    child.text = "D"
