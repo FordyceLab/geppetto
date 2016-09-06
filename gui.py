@@ -180,11 +180,7 @@ def initialize_valve_states(instance):
         if button.initial_state:
             pressurize(button.valve_number)
         else:
-<<<<<<< HEAD
             depressurize(button.valve_number)
-=======
-            pressurize(button.valve_number)
->>>>>>> 486e97c714a839e6f27ed46e475d19a5c3ccc434
 
 
 def pressurize_all_valves(instance):
