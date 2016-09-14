@@ -154,10 +154,22 @@ class ControlPanel(BoxLayout):
             # If the button state is True, pressurize it
             if button.initial_state:
                 pressurize(button.valve_number)
+                for child in button.walk():
+                    if child.id == str(button.valve_number) + "_valve_button":
+                        child.background_color = (.05, .5, .94, 1.0)
+                        child.pressure_state = True
+                    if child.id == str(button.valve_number) + "_state_label":
+                        child.text = "P"
 
             # If the button state is False, depressurize it
             else:
                 depressurize(button.valve_number)
+                for child in button.walk():
+                    if child.id == str(button.valve_number) + "_valve_button":
+                        child.background_color = (.94, .05, .05, 1.0)
+                        child.pressure_state = False
+                    if child.id == str(button.valve_number) + "_state_label":
+                        child.text = "D"
 
     def read_valve_states(self, instance):
         """A function to read the current valve states from the Wago controller
@@ -206,6 +218,9 @@ class ControlPanel(BoxLayout):
                         child.pressure_state = False
                 if child.id == str(button.valve_number) + "_state_label":
                         child.text = "D"
+
+
+
 
 
 class ValveControls(FloatLayout):
