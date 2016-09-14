@@ -287,9 +287,10 @@ def change_pressure_state(instance):
 
     if read_valve(instance.valve_number + 512):
         pressurize(instance.valve_number)
-        instance.background_color = (.94, .05, .05, 1.0)
-        label.text = "D"
-    else:
-        depressurize(instance.valve_number)
         instance.background_color = (.05, .5, .94, 1.0)
         label.text = "P"
+    else:
+        depressurize(instance.valve_number)
+        instance.background_color = (.94, .05, .05, 1.0)
+        label.text = "D"
+        
