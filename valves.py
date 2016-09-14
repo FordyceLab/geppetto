@@ -15,3 +15,7 @@ def depressurize(valve_number):
     state = client.read_coils(register_number, 1).bits[0]
     if not state:
         client.write_coil(valve_number, True)
+
+
+def read_valve(register_number):
+    return client.read_coils(register_number, 1).bits[0]

@@ -3,7 +3,7 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.boxlayout import BoxLayout
-from valves import pressurize, depressurize
+from valves import pressurize, depressurize, read_valve, client
 from kivy.core.window import Window
 from kivy.graphics import Rectangle, Color
 from yaml import load
@@ -168,7 +168,7 @@ class ControlPanel(BoxLayout):
 
             # Set the 512 offset to read the appropriate register
             register_number = 512 + button.valve_number
-            state = client.read_coils(register_number, 1).bits[0]
+            state = read_valve(register_number)
             for child in button.walk():
                 if child.id == str(button.valve_number) + "_valve_button":
                     if not state:
