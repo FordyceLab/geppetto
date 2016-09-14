@@ -88,7 +88,6 @@ class PressureButton(Button):
         # Set local variables for the button, including setting the initial
         # color to gray
         self.id = str(valve_number) + "_valve_button"
-        self.pressure_state = initial_state
         self.background_normal = ''
         self.background_color = (.5, .5, .5, 1.0)
         self.valve_number = valve_number
@@ -157,7 +156,6 @@ class ControlPanel(BoxLayout):
                 for child in button.walk():
                     if child.id == str(button.valve_number) + "_valve_button":
                         child.background_color = (.05, .5, .94, 1.0)
-                        child.pressure_state = True
                     if child.id == str(button.valve_number) + "_state_label":
                         child.text = "P"
 
@@ -167,7 +165,6 @@ class ControlPanel(BoxLayout):
                 for child in button.walk():
                     if child.id == str(button.valve_number) + "_valve_button":
                         child.background_color = (.94, .05, .05, 1.0)
-                        child.pressure_state = False
                     if child.id == str(button.valve_number) + "_state_label":
                         child.text = "D"
 
@@ -185,10 +182,8 @@ class ControlPanel(BoxLayout):
                 if child.id == str(button.valve_number) + "_valve_button":
                     if not state:
                         child.background_color = (.05, .5, .94, 1.0)
-                        child.pressure_state = True
                     else:
                         child.background_color = (.94, .05, .05, 1.0)
-                        child.pressure_state = False
                 if child.id == str(button.valve_number) + "_state_label":
                     if not state:
                         child.text = "P"
@@ -203,7 +198,6 @@ class ControlPanel(BoxLayout):
             for child in button.walk():
                 if child.id == str(button.valve_number) + "_valve_button":
                         child.background_color = (.05, .5, .94, 1.0)
-                        child.pressure_state = True
                 if child.id == str(button.valve_number) + "_state_label":
                         child.text = "P"
 
@@ -215,7 +209,6 @@ class ControlPanel(BoxLayout):
             for child in button.walk():
                 if child.id == str(button.valve_number) + "_valve_button":
                         child.background_color = (.94, .05, .05, 1.0)
-                        child.pressure_state = False
                 if child.id == str(button.valve_number) + "_state_label":
                         child.text = "D"
 
@@ -292,13 +285,11 @@ def change_pressure_state(instance):
         if child.id == str(instance.valve_number) + "_state_label":
             label = child
 
-    if instance.pressure_state:
+    if read_valve(instance.valve_number + 512):
         pressurize(instance.valve_number)
-        instance.pressure_state = False
         instance.background_color = (.94, .05, .05, 1.0)
         label.text = "D"
     else:
         depressurize(instance.valve_number)
-        instance.pressure_state = True
         instance.background_color = (.05, .5, .94, 1.0)
         label.text = "P"
