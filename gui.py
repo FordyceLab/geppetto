@@ -9,7 +9,7 @@ from kivy.graphics import Rectangle, Color
 from yaml import load
 from os.path import sep, expanduser
 from kivy.garden.filebrowser import FileBrowser
-
+from pymodbus3.client.sync import ModbusTcpClient
 
 
 class ButtonHolder(BoxLayout):

@@ -1,6 +1,3 @@
-from pymodbus3.client.sync import ModbusTcpClient
-
-
 def pressurize(valve_number):
     """Function to pressurize the valve of a given number"""
 
