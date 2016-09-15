@@ -5,7 +5,7 @@ def pressurize(client, valve_number):
     register_number = 512 + valve_number
 
     # Read the state of the valve in question
-    state = client.read_coils(register_number, 1).bits[0]
+    state = client.read_coils(client, register_number, 1).bits[0]
 
     # Valve is currently depressurized if the register state is True
     if state:
@@ -19,7 +19,7 @@ def depressurize(client, valve_number):
     register_number = 512 + valve_number
 
     # Read the state of the valve in question
-    state = client.read_coils(register_number, 1).bits[0]
+    state = client.read_coils(client, register_number, 1).bits[0]
 
     # Valve is currently pressurized if the register state is False
     if not state:
