@@ -153,7 +153,7 @@ class ControlPanel(BoxLayout):
 
             # If the button state is True, pressurize it
             if button.initial_state:
-                pressurize(button.valve_number)
+                pressurize(client, button.valve_number)
                 for child in button.walk():
                     if child.id == str(button.valve_number) + "_valve_button":
                         child.background_color = (.05, .5, .94, 1.0)
@@ -162,7 +162,7 @@ class ControlPanel(BoxLayout):
 
             # If the button state is False, depressurize it
             else:
-                depressurize(button.valve_number)
+                depressurize(client, button.valve_number)
                 for child in button.walk():
                     if child.id == str(button.valve_number) + "_valve_button":
                         child.background_color = (.94, .05, .05, 1.0)
@@ -179,7 +179,7 @@ class ControlPanel(BoxLayout):
             register_number = 512 + button.valve_number
 
             # Read the initial state of the button
-            state = read_valve(register_number)
+            state = read_valve(client, register_number)
 
             # Update the color and label for each of the buttons
             for child in button.walk():
@@ -201,7 +201,7 @@ class ControlPanel(BoxLayout):
         for button in buttons:
 
             # Pressurize the valve and update color and label
-            pressurize(button.valve_number)
+            pressurize(client, button.valve_number)
             for child in button.walk():
                 if child.id == str(button.valve_number) + "_valve_button":
                         child.background_color = (.05, .5, .94, 1.0)
@@ -215,7 +215,7 @@ class ControlPanel(BoxLayout):
         for button in buttons:
 
             # Depressurize the valve and update the color and label
-            depressurize(button.valve_number)
+            depressurize(client, button.valve_number)
             for child in button.walk():
                 if child.id == str(button.valve_number) + "_valve_button":
                         child.background_color = (.94, .05, .05, 1.0)
@@ -286,7 +286,7 @@ class ChooseConfigFile(App):
         user_path = expanduser('~') + sep + 'Documents'
         browser = FileBrowser(select_string='Select',
                               favorites=[(user_path, 'Documents')])
-        
+
         # Bind the action functions and load up the file browser
         browser.bind(
             on_success=self._fbrowser_success,
@@ -298,7 +298,7 @@ class ChooseConfigFile(App):
         self.stop()
 
     def _fbrowser_success(self, instance):
-        """Function to pass the config file into the global environment""" 
+        """Function to pass the config file into the global environment"""
         global config_file
         config_file = instance.selection[0]
         self.stop()
@@ -314,10 +314,10 @@ def change_pressure_state(instance):
 
     # Change the pressure state, the color of the button, and the label
     if read_valve(instance.valve_number + 512):
-        pressurize(instance.valve_number)
+        pressurize(client, instance.valve_number)
         instance.background_color = (.05, .5, .94, 1.0)
         label.text = "P"
     else:
-        depressurize(instance.valve_number)
+        depressurize(client, instance.valve_number)
         instance.background_color = (.94, .05, .05, 1.0)
         label.text = "D"

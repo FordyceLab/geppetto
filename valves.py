@@ -1,4 +1,4 @@
-def pressurize(valve_number):
+def pressurize(client, valve_number):
     """Function to pressurize the valve of a given number"""
 
     # Offset the register number
@@ -12,7 +12,7 @@ def pressurize(valve_number):
         client.write_coil(valve_number, False)
 
 
-def depressurize(valve_number):
+def depressurize(client, valve_number):
     """Function to depressurize the valve of a given number"""
 
     # Offset the register number
@@ -26,6 +26,6 @@ def depressurize(valve_number):
         client.write_coil(valve_number, True)
 
 
-def read_valve(register_number):
+def read_valve(client, register_number):
     """Functiont to read a specific register number"""
     return client.read_coils(register_number, 1).bits[0]
