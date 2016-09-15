@@ -313,7 +313,7 @@ def change_pressure_state(instance):
             label = child
 
     # Change the pressure state, the color of the button, and the label
-    if read_valve(instance.valve_number + 512):
+    if read_valve(client, instance.valve_number + 512):
         pressurize(client, instance.valve_number)
         instance.background_color = (.05, .5, .94, 1.0)
         label.text = "P"
