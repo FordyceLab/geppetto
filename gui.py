@@ -3,12 +3,13 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.boxlayout import BoxLayout
-from valves import pressurize, depressurize, read_valve, client
+from valves import pressurize, depressurize, read_valve
 from kivy.core.window import Window
 from kivy.graphics import Rectangle, Color
 from yaml import load
 from os.path import sep, expanduser
 from kivy.garden.filebrowser import FileBrowser
+
 
 
 class ButtonHolder(BoxLayout):
@@ -171,13 +172,16 @@ class ControlPanel(BoxLayout):
     def read_valve_states(self, instance):
         """A function to read the current valve states from the Wago controller
         """
-
         # For each button
         for button in buttons:
 
             # Set the 512 offset to read the appropriate register
             register_number = 512 + button.valve_number
+
+            # Read the initial state of the button
             state = read_valve(register_number)
+
+            # Update the color and label for each of the buttons
             for child in button.walk():
                 if child.id == str(button.valve_number) + "_valve_button":
                     if not state:
@@ -191,9 +195,12 @@ class ControlPanel(BoxLayout):
                         child.text = "D"
 
     def pressurize_all_valves(self, instance):
-        """
-        """
+        """A function to pressurize all of the buttons under control of the
+        program"""
+        # For each button
         for button in buttons:
+
+            # Pressurize the valve and update color and label
             pressurize(button.valve_number)
             for child in button.walk():
                 if child.id == str(button.valve_number) + "_valve_button":
@@ -202,9 +209,12 @@ class ControlPanel(BoxLayout):
                         child.text = "P"
 
     def depressurize_all_valves(self, instance):
-        """
-        """
+        """A function to depressurize all of the buttons under control of the
+        program"""
+        # For each button
         for button in buttons:
+
+            # Depressurize the valve and update the color and label
             depressurize(button.valve_number)
             for child in button.walk():
                 if child.id == str(button.valve_number) + "_valve_button":
@@ -213,23 +223,23 @@ class ControlPanel(BoxLayout):
                         child.text = "D"
 
 
-
-
-
 class ValveControls(FloatLayout):
-    """A class to 
-    """
+    """A class to manage the valve controls within the layout"""
     def __init__(self, *args, **kwargs):
         super(ValveControls, self).__init__(*args, **kwargs)
         self.size = (800, 530)
 
+        # Set the background to eaither white or an image
         with self.canvas:
             Color(1, 1, 1, 1)
             Rectangle(source=device_image,
                       size=self.size,
                       center=self.center)
 
+        # For each label
         for i in labels:
+
+            # Place a button holder with and appropriate button
             button = ButtonHolder(valve_number=valves[i]["valve_number"],
                                   label=i,
                                   initial_state=valves[i]["initial_state"],
@@ -237,54 +247,72 @@ class ValveControls(FloatLayout):
                                   y=valves[i]["y_pos"])
 
             buttons.append(button)
-
             self.add_widget(button)
 
 
 class Geppetto(App):
+    """Main class for the Geppetto app"""
     def build(self):
+
+        # Open the config file and read the values
         with open(config_file, "r") as config_values:
             config = load(config_values)
 
+        # Define global variables from the config file
         global valves
         global labels
         global device_image
         global buttons
+        global client
 
+        # Pull the values from the config file and load the variables
         valves = {valve: config["valves"][valve] for valve in config["valves"]}
         labels = [key for key in valves.keys()]
         device_image = config["device_image"]
         buttons = []
+        client = ModbusTcpClient(config["ip_address"])
 
+        # Change the background to white and display the layout
         Window.clearcolor = (1, 1, 1, 1)
         layout = MainLayout()
         return layout
 
 
 class ChooseConfigFile(App):
+    """Main class for the config file chooser"""
     def build(self):
+
+        # Define the user paths and home destination
         user_path = expanduser('~') + sep + 'Documents'
         browser = FileBrowser(select_string='Select',
                               favorites=[(user_path, 'Documents')])
+        
+        # Bind the action functions and load up the file browser
         browser.bind(
             on_success=self._fbrowser_success,
             on_canceled=self._fbrowser_canceled)
         return browser
 
     def _fbrowser_canceled(self, instance):
+        """Function to close the app if canceled"""
         self.stop()
 
     def _fbrowser_success(self, instance):
+        """Function to pass the config file into the global environment""" 
         global config_file
         config_file = instance.selection[0]
         self.stop()
 
 
 def change_pressure_state(instance):
+    """Function to change the pressure state of the button"""
+
+    # Find the label corresponding to the pushed button
     for child in instance.parent.walk():
         if child.id == str(instance.valve_number) + "_state_label":
             label = child
 
+    # Change the pressure state, the color of the button, and the label
     if read_valve(instance.valve_number + 512):
         pressurize(instance.valve_number)
         instance.background_color = (.05, .5, .94, 1.0)
@@ -293,4 +321,3 @@ def change_pressure_state(instance):
         depressurize(instance.valve_number)
         instance.background_color = (.94, .05, .05, 1.0)
         label.text = "D"
-        
