@@ -30,12 +30,25 @@ valves:
 - The third line begins the dictionary of valve listings.
     - For each valve:
         - The first line contains the valve name as it will appear in the GUI.
-        - The second line contains the valve number mapping. Valve numbers are 0-indexed.
-        - The third line contains the x position for the center of the box containing the button controlling the valve.
-        - The fourth line contains the y position for the center of the box containing the button controlling the valve.
+        - The first indented line contains the valve number mapping. Valve numbers are 0-indexed.
+        - The second indented line contains the initial state of the valve: `True` maps to pressurized while `False` maps to depressurized.
+        - The third indented line contains the x position for the center of the box containing the button controlling the valve.
+        - The fourth indented line contains the y position for the center of the box containing the button controlling the valve.
 
 To get the x and y positions for the buttons, I suggest using a program like ImageJ to open your background image, then hovering above and recording the position you would like place the button. ImageJ will give coordinates from the upper left corner of the image, while Geppetto takes coordinates from the lower left corner. To convert between the two formats, you will simply need to subtract the y-coordinate from 530 and enter that into the config file. The x-coordinate from ImageJ will work directly with Geppetto.
 
 Once you have completed the config file, you can run the Geppetto program. Use the file selection dialog box to select your desired config file as shown below.
 
 ![Config file dialog box](./images/FileDialog.png)
+
+## The interface and controlling valves
+
+The Geppetto interface consists of four master control buttons as well inidividual controls for each valve. The roles of the master control buttons are outlined below:
+
+- `Initialize Valve States` - Set all of the valves to the state specified in the config file  `initial_state` variable.
+- `Read Valve States` - Read the current state of all valves and update GUI accordingly. This functionality is useful in the case of program/computer crash and restart.
+- `Pressurize All` - Pressurize all of the valves.
+- `Depressurize All` - Depressurize all of the valves.
+
+![Main GUI](./images/MainGUI.png)
+
