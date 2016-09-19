@@ -8,7 +8,7 @@ To begin, you will need to open up a YAML config file that specifies the mapping
 
 ```yaml
 ip_address: 192.168.1.3
-device_image: device.jpg
+device_image: "/Users/tyler/device.jpg"
 valves:
     Line 1:
         valve_number: 0
@@ -43,7 +43,7 @@ Once you have completed the config file, you can run the Geppetto program. Use t
 
 ## The interface and controlling valves
 
-The Geppetto interface consists of four master control buttons as well inidividual controls for each valve. The roles of the master control buttons are outlined below:
+The Geppetto interface consists of four master control buttons as well individual controls for each valve. The roles of the master control buttons are outlined below:
 
 - `Initialize Valve States` - Set all of the valves to the state specified in the config file  `initial_state` variable.
 - `Read Valve States` - Read the current state of all valves and update GUI accordingly. This functionality is useful in the case of program/computer crash and restart.
