@@ -254,6 +254,10 @@ class Geppetto(App):
     """Main class for the Geppetto app"""
     def build(self):
 
+        # Quit the program if a control file was not selected
+        if not config_file:
+            self.stop()
+
         # Open the config file and read the values
         with open(config_file, "r") as config_values:
             config = load(config_values)
