@@ -36,4 +36,6 @@ valves:
 
 To get the x and y positions for the buttons, I suggest using a program like ImageJ to open your background image, then hovering above and recording the position you would like place the button. ImageJ will give coordinates from the upper left corner of the image, while Geppetto takes coordinates from the lower left corner. To convert between the two formats, you will simply need to subtract the y-coordinate from 530 and enter that into the config file. The x-coordinate from ImageJ will work directly with Geppetto.
 
-Once you have completed the config file, you can run the Geppetto program. Use the file selection dialog box to select your desired config file. 
+Once you have completed the config file, you can run the Geppetto program. Use the file selection dialog box to select your desired config file as shown below.
+
+![Config file dialog box](./images/FileDialog.png)
