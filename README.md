@@ -25,7 +25,7 @@ valves:
 - The first line of this example specifies the IP address of the Wago controller.
 - The second line specifies the background image to use. This can be an image of the device you wish to control or some image that will help you keep track of which buttons control which valves.
     - The image must be 800 px wide by 530 px high in order to properly fit the GUI.
-    - It is best to specify the image using the [absolute path rather than the the relative path](http://www.linuxnix.com/abslute-path-vs-relative-path-in-linuxunix/).
+    - It is best to specify the image using the [absolute path rather than the relative path](http://www.linuxnix.com/abslute-path-vs-relative-path-in-linuxunix/).
     - If no image is specified, a white background will be generated.
 - The third line begins the dictionary of valve listings.
     - For each valve:
@@ -52,3 +52,4 @@ The Geppetto interface consists of four master control buttons as well inidividu
 
 ![Main GUI](./images/MainGUI.png)
 
+ When the program initially starts, the states of the valves are unknown to it. You can use the `Read Valve States` button to set the coloration and labeling to the current state of all valves, or one of the other 3 buttons to establish a state for each valve. From this point, the valves can be controlled individually using the buttons, each time a button is depressed, the color (red = depressurized, blue = pressurized) and label (D = depressurized, P = pressurized) will update. 
