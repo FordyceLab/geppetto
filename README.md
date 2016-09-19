@@ -1,0 +1,39 @@
+# Geppetto Microfluidic Pneumatic Controller
+
+Geppetto is a pure-python pneumatic control software based on the [Kivy graphical user interface framework](https://kivy.org/). The GUI is built to support nearly any user-defined control layout, with the ability to change the background image and the placement of the control buttons through the manipulation of simple [YAML](http://www.yaml.org) config file.
+
+## Writing and opening a config file
+
+To begin, you will need to open up a YAML config file that specifies the mapping of the control valves to buttons and the IP address of the Wago controller. An example config file is given the code block below:
+
+```yaml
+ip_address: 192.168.1.3
+device_image: device.jpg
+valves:
+    Line 1:
+        valve_number: 0
+        initial_state: False
+        x_pos: 120
+        y_pos: 10
+    Line 2:
+        valve_number: 1
+        initial_state: False
+        x_pos: 60
+        y_pos: 365
+```
+
+- The first line of this example specifies the IP address of the Wago controller.
+- The second line specifies the background image to use. This can be an image of the device you wish to control or some image that will help you keep track of which buttons control which valves.
+    - The image must be 800 px wide by 530 px high in order to properly fit the GUI.
+    - It is best to specify the image using the [absolute path rather than the the relative path](http://www.linuxnix.com/abslute-path-vs-relative-path-in-linuxunix/).
+    - If no image is specified, a white background will be generated.
+- The third line begins the dictionary of valve listings.
+    - For each valve:
+        - The first line contains the valve name as it will appear in the GUI.
+        - The second line contains the valve number mapping. Valve numbers are 0-indexed.
+        - The third line contains the x position for the center of the box containing the button controlling the valve.
+        - The fourth line contains the y position for the center of the box containing the button controlling the valve.
+
+To get the x and y positions for the buttons, I suggest using a program like ImageJ to open your background image, then hovering above and recording the position you would like place the button. ImageJ will give coordinates from the upper left corner of the image, while Geppetto takes coordinates from the lower left corner. To convert between the two formats, you will simply need to subtract the y-coordinate from 530 and enter that into the config file. The x-coordinate from ImageJ will work directly with Geppetto.
+
+Once you have completed the config file, you can run the Geppetto program. Use the file selection dialog box to select your desired config file. 
