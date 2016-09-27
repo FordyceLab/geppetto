@@ -2,6 +2,8 @@
 
 Geppetto is a pure-python pneumatic control software based on the [Kivy graphical user interface framework](https://kivy.org/). The GUI is built to support nearly any user-defined control layout, with the ability to change the background image and the placement of the control buttons through the manipulation of simple [YAML](http://www.yaml.org) config file.
 
+A Windows binary is available [**here**](https://github.com/FordyceLab/geppetto/releases/download/v1.0/Geppetto.exe).
+
 ## Writing and opening a config file
 
 To begin, you will need to open up a YAML config file that specifies the mapping of the control valves to buttons and the IP address of the Wago controller. An example config file is given the code block below:
