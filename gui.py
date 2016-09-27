@@ -255,7 +255,9 @@ class Geppetto(App):
     def build(self):
 
         # Quit the program if a control file was not selected
-        if not config_file:
+        try:
+            config_file
+        except NameError:
             self.stop()
 
         # Open the config file and read the values
