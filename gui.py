@@ -1,8 +1,14 @@
+from kivy.config import Config
+Config.set('graphics','resizable',0)
+Config.set('graphics', 'width', '800')
+Config.set('graphics', 'height', '800')
+
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.dropdown import DropDown
 from valves import pressurize, depressurize, read_valve
 from kivy.core.window import Window
 from kivy.graphics import Rectangle, Color
@@ -10,6 +16,7 @@ from yaml import load
 from os.path import sep, expanduser
 from filebrowser import FileBrowser
 from pymodbus3.client.sync import ModbusTcpClient
+import os
 
 
 class ButtonHolder(BoxLayout):
@@ -108,6 +115,10 @@ class MainLayout(BoxLayout):
         controls = ControlPanel()
         self.add_widget(controls)
 
+        # Initialize the automation panel
+        controls = AutomationPanel()
+        self.add_widget(controls)
+
         # Initialize the valve controls
         valves = ValveControls()
         self.add_widget(valves)
@@ -121,7 +132,7 @@ class ControlPanel(BoxLayout):
         # Initialize local parameters for the control panel
         self.orientation = "horizontal"
         self.spacing = 10
-        self.padding = 10
+        self.padding = 5
         self.size_hint_y = 0.1
 
         # Add a button to initialize the valve states per the config file
@@ -250,6 +261,67 @@ class ValveControls(FloatLayout):
             self.add_widget(button)
 
 
+class AutomationPanel(BoxLayout):
+    """A class to contain the control panel buttons"""
+    def __init__(self, *args, **kwargs):
+        super(AutomationPanel, self).__init__(*args, **kwargs)
+
+        self.orientation = "vertical"
+        self.spacing = 2
+        self.padding = 5
+        self.size_hint_y = 0.3
+
+        # create a dropdown with 10 buttons
+        dropdown = DropDown()
+        if script_folder != None:
+            for index in os.listdir(script_folder):
+                # when adding widgets, we need to specify the height manually (disabling
+                # the size_hint_y) so the dropdown can calculate the area it needs.
+                btn = Button(text=index, size_hint_y=None, height=25)
+
+                # for each button, attach a callback that will call the select() method
+                # on the dropdown. We'll pass the text of the button as the data of the
+                # selection.
+                btn.bind(on_release=lambda btn: dropdown.select(btn.text))
+
+                # then add the button inside the dropdown
+                dropdown.add_widget(btn)
+
+        # create a big main button
+        mainbutton = Button(text="Automation Scripts", size_hint=(1, 0.3))
+
+        # show the dropdown menu when the main button is released
+        # note: all the bind() calls pass the instance of the caller (here, the
+        # mainbutton instance) as the first argument of the callback (here,
+        # dropdown.open.).
+        mainbutton.bind(on_release=dropdown.open)
+
+        # one last thing, listen for the selection in the dropdown list and
+        # assign the data to the button text.
+        dropdown.bind(on_select=lambda instance, x: setattr(mainbutton, 'text', x))
+
+        layout = BoxLayout(orientation='horizontal')
+
+        step = Label(text='Step', color=(0, 0, 0, 1.0))
+        time = Label(text='0:00', color=(0, 0, 0, 1.0))
+
+        layout.add_widget(step)
+        layout.add_widget(time)
+
+        start = Button(text="Start", size_hint=(1, 0.3),
+            background_color=(.13, .56, .13, 1.0))
+        pause = Button(text="Pause", size_hint=(1, 0.3),
+            background_color=(.8, .8, 0, 1.0))
+        stop = Button(text="Stop", size_hint=(1, 0.3),
+            background_color=(.94, .05, .05, 1.0))
+
+        self.add_widget(mainbutton)
+        self.add_widget(layout)
+        self.add_widget(start)
+        self.add_widget(pause)
+        self.add_widget(stop)
+
+
 class Geppetto(App):
     """Main class for the Geppetto app"""
     def build(self):
@@ -265,6 +337,7 @@ class Geppetto(App):
             config = load(config_values)
 
         # Define global variables from the config file
+        global script_folder
         global valves
         global labels
         global device_image
@@ -272,6 +345,8 @@ class Geppetto(App):
         global client
 
         # Pull the values from the config file and load the variables
+        if "automation_scripts_folder" in config.keys():
+            script_folder = config["automation_scripts_folder"]
         valves = {valve: config["valves"][valve] for valve in config["valves"]}
         labels = [key for key in valves.keys()]
         device_image = config["device_image"]
