@@ -10,7 +10,7 @@ To begin, you will need to open up a YAML config file that specifies the mapping
 
 ```yaml
 ip_address: 192.168.1.3
-device_image: "/Users/tyler/device.jpg"
+device_image: ".\device.jpg"
 valves:
     Line 1:
         valve_number: 0
@@ -27,7 +27,7 @@ valves:
 - The first line of this example specifies the IP address of the Wago controller.
 - The second line specifies the background image to use. This can be an image of the device you wish to control or some image that will help you keep track of which buttons control which valves.
     - The image must be 800 px wide by 530 px high in order to properly fit the GUI.
-    - It is best to specify the image using the [absolute path rather than the relative path](http://www.linuxnix.com/abslute-path-vs-relative-path-in-linuxunix/).
+    - **_The image must be specified with a path relative the `geppetto` executable_**
     - If no image is specified, a white background will be generated.
 - The third line begins the dictionary of valve listings.
     - For each valve:
