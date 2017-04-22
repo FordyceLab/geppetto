@@ -10,7 +10,7 @@ To begin, you will need to open up a YAML config file that specifies the mapping
 
 ```yaml
 ip_address: 192.168.1.3
-device_image: ".\device.jpg"
+device_image: .\device.jpg
 valves:
     Line 1:
         valve_number: 0
